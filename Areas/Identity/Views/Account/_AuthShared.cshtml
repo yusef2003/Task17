@@ -1,0 +1,60 @@
+@* Shared styles for all Identity pages *@
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  .auth-wrap {
+    --bg:#0d0f14; --surf:#161a23; --surf2:#1c2030; --rim:#252a3a;
+    --gold:#c9972c; --gold-lt:#e8b84b; --silver:#8a95b0; --white:#f0f2f8;
+    --red:#d94f3d; --green:#3ecf8e;
+    font-family:'DM Sans',sans-serif;
+    background:var(--bg);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:2rem 1rem;
+    color:var(--white);
+  }
+  .auth-box { width:100%; max-width:440px; }
+  .auth-logo { text-align:center; margin-bottom:2rem; }
+  .auth-logo-icon { font-size:3rem; display:block; margin-bottom:.5rem; }
+  .auth-logo-title { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; letter-spacing:.12em; color:var(--white); }
+  .auth-logo-sub { font-size:.78rem; color:var(--silver); letter-spacing:.08em; margin-top:.2rem; }
+  .auth-card { background:var(--surf); border:1px solid var(--rim); border-radius:12px; overflow:hidden; }
+  .auth-card-header { padding:1.6rem 2rem 1.2rem; border-bottom:1px solid var(--rim); background:var(--surf2); }
+  .auth-card-header h2 { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:.1em; margin:0; color:var(--white); }
+  .auth-card-header p { font-size:.8rem; color:var(--silver); margin:.3rem 0 0; }
+  .auth-card-body { padding:1.8rem 2rem; display:flex; flex-direction:column; gap:1.1rem; }
+  .auth-field { display:flex; flex-direction:column; gap:.4rem; }
+  .auth-label { font-size:.68rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--silver); }
+  .auth-input {
+    background:var(--surf2); border:1px solid var(--rim); border-radius:6px;
+    color:var(--white); font-family:'DM Sans',sans-serif; font-size:.9rem;
+    padding:.65rem .95rem; outline:none; transition:border-color .2s,box-shadow .2s; width:100%;
+  }
+  .auth-input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,151,44,.12); }
+  .auth-input.input-validation-error { border-color:var(--red)!important; }
+  .field-validation-error { font-size:.72rem; color:var(--red); }
+  .auth-checkbox-row { display:flex; align-items:center; gap:.5rem; font-size:.83rem; color:var(--silver); cursor:pointer; }
+  .auth-checkbox-row input[type=checkbox] { accent-color:var(--gold); width:15px; height:15px; }
+  .auth-submit {
+    width:100%; display:flex; align-items:center; justify-content:center; gap:.5rem;
+    background:var(--gold); color:#0a0b0f; font-family:'DM Sans',sans-serif;
+    font-size:.85rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+    padding:.75rem; border:none; border-radius:6px; cursor:pointer;
+    transition:background .2s,transform .15s; margin-top:.4rem;
+  }
+  .auth-submit:hover { background:var(--gold-lt); transform:translateY(-1px); }
+  .auth-divider { display:flex; align-items:center; gap:.75rem; color:var(--silver); font-size:.75rem; }
+  .auth-divider::before,.auth-divider::after { content:''; flex:1; height:1px; background:var(--rim); }
+  .auth-links { text-align:center; font-size:.8rem; color:var(--silver); padding-bottom:1.8rem; }
+  .auth-links a { color:var(--gold); text-decoration:none; font-weight:600; }
+  .auth-links a:hover { color:var(--gold-lt); text-decoration:underline; }
+  .auth-alert { padding:.75rem 1rem; border-radius:6px; font-size:.83rem; margin-bottom:.4rem; }
+  .auth-alert-info  { background:rgba(138,149,176,.12); border:1px solid rgba(138,149,176,.3); color:var(--silver); }
+  .auth-alert-error { background:rgba(217,79,61,.1);    border:1px solid rgba(217,79,61,.3);   color:#e0756a; }
+  .auth-alert-success { background:rgba(62,207,142,.1); border:1px solid rgba(62,207,142,.3);  color:#3ecf8e; }
+  .validation-summary-errors ul { margin:0; padding-left:1.2rem; font-size:.82rem; color:var(--red); list-style:disc; }
+  .auth-forgot { text-align:right; }
+  .auth-forgot a { font-size:.75rem; color:var(--silver); text-decoration:none; }
+  .auth-forgot a:hover { color:var(--gold); }
+</style>

@@ -1,0 +1,531 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .dash-root {
+        --bg: #0d0f14;
+        --surface: #161a23;
+        --surface2: #1e2330;
+        --border: #2a3045;
+        --accent: #e8a020;
+        --accent2: #3ecfcf;
+        --accent3: #e05c5c;
+        --accent4: #7b6cf6;
+        --text: #e8eaf0;
+        --muted: #6b7494;
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        padding: 2rem 2.5rem;
+        min-height: 100vh;
+    }
+
+    .dash-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 2.5rem;
+    }
+
+    .dash-header-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 3rem;
+        letter-spacing: .12em;
+        color: var(--text);
+        line-height: 1;
+    }
+
+        .dash-header-title span {
+            color: var(--accent);
+        }
+
+    .dash-header-sub {
+        font-size: .8rem;
+        color: var(--muted);
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        margin-top: .3rem;
+    }
+
+    .btn-report {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: var(--accent);
+        color: #0d0f14;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        font-size: .82rem;
+        letter-spacing: .05em;
+        padding: .65rem 1.4rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity .2s, transform .15s;
+    }
+
+        .btn-report:hover {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.2rem;
+        margin-bottom: 2rem;
+    }
+
+    @@media (max-width: 900px) {
+        .stat-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .stat-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.4rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,.4);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .stat-card.c1::before {
+            background: var(--accent);
+        }
+
+        .stat-card.c2::before {
+            background: var(--accent2);
+        }
+
+        .stat-card.c3::before {
+            background: var(--accent3);
+        }
+
+        .stat-card.c4::before {
+            background: var(--accent4);
+        }
+
+    .stat-icon {
+        position: absolute;
+        right: 1.2rem;
+        top: 1.2rem;
+        font-size: 1.6rem;
+        opacity: .18;
+    }
+
+    .stat-label {
+        font-size: .68rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: .6rem;
+    }
+
+    .stat-value {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2.1rem;
+        letter-spacing: .04em;
+        line-height: 1;
+    }
+
+    .stat-card.c1 .stat-value {
+        color: var(--accent);
+    }
+
+    .stat-card.c2 .stat-value {
+        color: var(--accent2);
+    }
+
+    .stat-card.c3 .stat-value {
+        color: var(--accent3);
+    }
+
+    .stat-card.c4 .stat-value {
+        color: var(--accent4);
+    }
+
+    .stat-sub {
+        font-size: .75rem;
+        color: var(--muted);
+        margin-top: .45rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stat-badge {
+        display: inline-block;
+        font-size: .65rem;
+        font-weight: 600;
+        padding: .2rem .55rem;
+        border-radius: 20px;
+        margin-top: .5rem;
+    }
+
+    .c1 .stat-badge {
+        background: rgba(232,160,32,.15);
+        color: var(--accent);
+    }
+
+    .c2 .stat-badge {
+        background: rgba(62,207,207,.12);
+        color: var(--accent2);
+    }
+
+    .c3 .stat-badge {
+        background: rgba(224,92,92,.12);
+        color: var(--accent3);
+    }
+
+    .c4 .stat-badge {
+        background: rgba(123,108,246,.15);
+        color: var(--accent4);
+    }
+
+    .chart-grid {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    @@media (max-width: 860px) {
+        .chart-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .chart-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+
+    .chart-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.2rem;
+    }
+
+    .chart-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.15rem;
+        letter-spacing: .1em;
+        color: var(--text);
+    }
+
+    .chart-pill {
+        font-size: .65rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        padding: .2rem .6rem;
+        border-radius: 20px;
+        background: var(--surface2);
+        color: var(--muted);
+        border: 1px solid var(--border);
+    }
+
+    .chart-wrap {
+        position: relative;
+        width: 100%;
+    }
+
+    .count-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.2rem;
+    }
+
+    @@media (max-width: 700px) {
+        .count-row {
+            grid-template-columns: repeat(2,1fr);
+        }
+    }
+
+    .count-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: transform .2s;
+    }
+
+        .count-card:hover {
+            transform: translateY(-2px);
+        }
+
+    .count-icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .ci1 {
+        background: rgba(232,160,32,.15);
+    }
+
+    .ci2 {
+        background: rgba(62,207,207,.12);
+    }
+
+    .ci3 {
+        background: rgba(224,92,92,.12);
+    }
+
+    .ci4 {
+        background: rgba(123,108,246,.15);
+    }
+
+    .count-num {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.6rem;
+        letter-spacing: .05em;
+        line-height: 1;
+    }
+
+    .count-lbl {
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        color: var(--muted);
+    }
+</style>
+
+<div class="dash-root">
+
+    <div class="dash-header">
+        <div>
+            <div class="dash-header-title">Cinema <span>Admin</span></div>
+            <div class="dash-header-sub">Management Overview &mdash; All Branches</div>
+      
+
+    <div class="stat-grid">
+
+        <div class="stat-card c1">
+            <div class="stat-icon">💰</div>
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value" id="val-revenue">$0</div>
+            <div class="stat-sub">Across all cinemas</div>
+            <span class="stat-badge">All time</span>
+        </div>
+
+        <div class="stat-card c2">
+            <div class="stat-icon">🏟️</div>
+            <div class="stat-label">Top Cinema</div>
+            <div class="stat-value" id="val-top-cinema" style="font-size:1.3rem;padding-top:.3rem">–</div>
+            <div class="stat-sub" id="val-top-cinema-rev">–</div>
+            <span class="stat-badge">Highest earner</span>
+        </div>
+
+        <div class="stat-card c3">
+            <div class="stat-icon">🎬</div>
+            <div class="stat-label">Top Movie</div>
+            <div class="stat-value" id="val-top-movie" style="font-size:1.3rem;padding-top:.3rem">–</div>
+            <div class="stat-sub" id="val-top-movie-tickets">–</div>
+            <span class="stat-badge">Most tickets</span>
+        </div>
+
+        <div class="stat-card c4">
+            <div class="stat-icon">🎟️</div>
+            <div class="stat-label">Tickets Sold</div>
+            <div class="stat-value" id="val-tickets">0</div>
+            <div class="stat-sub">All movies combined</div>
+            <span class="stat-badge">All time</span>
+        </div>
+
+    </div>
+
+    <div class="chart-grid">
+
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-title">Tickets Sold per Movie</div>
+                <span class="chart-pill">Bar Chart</span>
+            </div>
+            <div class="chart-wrap" style="height:260px">
+                <canvas id="chartMovies"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-title">Actors by Movie Count</div>
+                <span class="chart-pill">Bar Chart</span>
+            </div>
+            <div class="chart-wrap" style="height:260px">
+                <canvas id="chartActors"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="count-row">
+        <div class="count-card">
+            <div class="count-icon-wrap ci1">🎭</div>
+            <div class="count-info">
+                <div class="count-num" style="color:var(--accent)">5</div>
+                <div class="count-lbl">Categories</div>
+            </div>
+        </div>
+        <div class="count-card">
+            <div class="count-icon-wrap ci2">🏟️</div>
+            <div class="count-info">
+                <div class="count-num" style="color:var(--accent2)">5</div>
+                <div class="count-lbl">Cinemas</div>
+            </div>
+        </div>
+        <div class="count-card">
+            <div class="count-icon-wrap ci3">🎭</div>
+            <div class="count-info">
+                <div class="count-num" style="color:var(--accent3)">6</div>
+                <div class="count-lbl">Actors</div>
+            </div>
+        </div>
+        <div class="count-card">
+            <div class="count-icon-wrap ci4">🎬</div>
+            <div class="count-info">
+                <div class="count-num" style="color:var(--accent4)">10</div>
+                <div class="count-lbl">Movies</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const totalRevenue  = 387500;
+        const topCinemaName = "Cinema Cairo";
+        const topCinemaRev  = 160000;
+        const topMovieName  = "Avengers: Endgame";
+        const topMovieTix   = 3200;
+        const totalTickets  = 11850;
+
+        const movieLabels  = ["Avengers: Endgame", "Now You See Me", "Extraction", "Knives Out", "The Dark Knight"];
+        const movieTickets = [3200, 2800, 2400, 1900, 1550];
+
+        const actorLabels = ["Christian Bale", "Robert Downey Jr.", "Chris Hemsworth", "Scarlett Johansson", "Chris Evans", "Mark Ruffalo"];
+        const actorCounts = [3, 3, 2, 2, 2, 1];
+
+        document.getElementById('val-revenue').textContent           = 'EGP ' + totalRevenue.toLocaleString();
+        document.getElementById('val-top-cinema').textContent        = topCinemaName;
+        document.getElementById('val-top-cinema-rev').textContent    = 'EGP ' + topCinemaRev.toLocaleString() + ' revenue';
+        document.getElementById('val-top-movie').textContent         = topMovieName;
+        document.getElementById('val-top-movie-tickets').textContent = topMovieTix.toLocaleString() + ' tickets sold';
+        document.getElementById('val-tickets').textContent           = totalTickets.toLocaleString();
+
+        Chart.defaults.color       = '#6b7494';
+        Chart.defaults.font.family = "'DM Sans', sans-serif";
+        Chart.defaults.font.size   = 11;
+        const gridColor = 'rgba(42,48,69,.6)';
+
+        new Chart(document.getElementById('chartMovies'), {
+        type: 'bar',
+        data: {
+        labels: movieLabels,
+        datasets: [{
+        label: 'Tickets Sold',
+        data: movieTickets,
+        backgroundColor: movieTickets.map((_, i) => i === 0 ? 'rgba(224,92,92,.85)' : 'rgba(123,108,246,.55)'),
+        borderColor:     movieTickets.map((_, i) => i === 0 ? '#e05c5c' : '#7b6cf6'),
+        borderWidth: 1.5,
+        borderRadius: 5
+        }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+        legend: { display: false },
+        tooltip: {
+        backgroundColor: '#1e2330', borderColor: '#2a3045', borderWidth: 1,
+        titleColor: '#e8eaf0', bodyColor: '#6b7494',
+        callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString() + ' tickets' }
+        }
+        },
+        scales: {
+        x: { grid: { color: gridColor }, ticks: { maxRotation: 30, minRotation: 30 } },
+        y: { grid: { color: gridColor }, beginAtZero: true,
+        ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(0) + 'k' : v } }
+        }
+        }
+        });
+
+        new Chart(document.getElementById('chartActors'), {
+        type: 'bar',
+        data: {
+        labels: actorLabels,
+        datasets: [{
+        label: 'Movies',
+        data: actorCounts,
+        backgroundColor: 'rgba(62,207,207,.55)',
+        borderColor: '#3ecfcf',
+        borderWidth: 1.5,
+        borderRadius: 5
+        }]
+        },
+        options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+        legend: { display: false },
+        tooltip: {
+        backgroundColor: '#1e2330', borderColor: '#2a3045', borderWidth: 1,
+        titleColor: '#e8eaf0', bodyColor: '#6b7494',
+        callbacks: { label: ctx => ' ' + ctx.parsed.x + ' movies' }
+        }
+        },
+        scales: {
+        x: { grid: { color: gridColor }, beginAtZero: true, ticks: { stepSize: 1 } },
+        y: { grid: { color: 'transparent' } }
+        }
+        }
+        });
+    </script>
+}

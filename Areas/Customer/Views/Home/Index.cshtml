@@ -1,0 +1,863 @@
+@model List<Movie>
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@@0,700;0,900;1,700&family=Outfit:wght@@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --ink: #0a0b0f;
+        --ink2: #12141c;
+        --ink3: #1c1f2e;
+        --rim: #252a3a;
+        --gold: #c9972c;
+        --gold-lt: #e8b84b;
+        --silver: #8a95b0;
+        --white: #f0f2f8;
+        --red: #d94f3d;
+    }
+
+    .cx * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .cx {
+        font-family: 'Outfit', sans-serif;
+        background: var(--ink);
+        color: var(--white);
+        min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .cx-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 7rem 2rem 5rem;
+        text-align: center;
+        background: var(--ink);
+    }
+
+        .cx-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,151,44,.18) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,.025) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,.025) 40px);
+            pointer-events: none;
+        }
+
+    .cx-hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        border: 1px solid rgba(201,151,44,.35);
+        padding: .3rem .9rem;
+        border-radius: 2px;
+        margin-bottom: 1.5rem;
+    }
+
+        .cx-hero-eyebrow::before,
+        .cx-hero-eyebrow::after {
+            content: '';
+            display: block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+            opacity: .6;
+        }
+
+    .cx-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 900;
+        line-height: .95;
+        letter-spacing: -.02em;
+        color: var(--white);
+        position: relative;
+    }
+
+        .cx-hero h1 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+    .cx-hero-sub {
+        margin-top: 1.2rem;
+        font-size: 1rem;
+        font-weight: 300;
+        color: var(--silver);
+        letter-spacing: .04em;
+    }
+
+    .cx-hero-rule {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        margin: 2rem auto 0;
+    }
+
+    /* ── FILTER BAR ── */
+    .cx-filter-wrap {
+        background: var(--ink2);
+        border-top: 1px solid var(--rim);
+        border-bottom: 1px solid var(--rim);
+        padding: 1.2rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+    }
+
+    .cx-filter-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .7rem;
+        align-items: center;
+    }
+
+        .cx-filter-inner .fx-input {
+            flex: 1 1 160px;
+            min-width: 120px;
+            background: var(--ink3);
+            border: 1px solid var(--rim);
+            border-radius: 4px;
+            color: var(--white);
+            font-family: 'Outfit', sans-serif;
+            font-size: .82rem;
+            padding: .55rem .9rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+            .cx-filter-inner .fx-input:focus {
+                border-color: var(--gold);
+            }
+
+            .cx-filter-inner .fx-input::placeholder {
+                color: var(--silver);
+            }
+
+            .cx-filter-inner .fx-input option {
+                background: var(--ink3);
+            }
+
+    .fx-check-wrap {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .8rem;
+        color: var(--silver);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+        .fx-check-wrap input[type=checkbox] {
+            accent-color: var(--gold);
+            width: 15px;
+            height: 15px;
+        }
+
+    .fx-btn {
+        font-family: 'Outfit', sans-serif;
+        font-size: .8rem;
+        font-weight: 600;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        padding: .55rem 1.4rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity .2s, transform .15s;
+        white-space: nowrap;
+    }
+
+        .fx-btn:hover {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+    .fx-btn-gold {
+        background: var(--gold);
+        color: #0a0b0f;
+    }
+
+    .fx-btn-ghost {
+        background: transparent;
+        border: 1px solid var(--rim);
+        color: var(--silver);
+    }
+
+    /* ── GRID ── */
+    .cx-grid-wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    .cx-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.8rem;
+    }
+
+    /* ── MOVIE CARD ── */
+    .cx-card {
+        background: var(--ink2);
+        border: 1px solid var(--rim);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform .25s, box-shadow .25s, border-color .25s;
+        animation: fadeUp .5s ease both;
+    }
+
+        .cx-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,.6), 0 0 0 1px rgba(201,151,44,.3);
+            border-color: rgba(201,151,44,.3);
+        }
+
+    @@keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .cx-card-img-wrap {
+        position: relative;
+        aspect-ratio: 2/3;
+        overflow: hidden;
+        background: var(--ink3);
+    }
+
+        .cx-card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .4s ease;
+            display: block;
+        }
+
+    .cx-card:hover .cx-card-img-wrap img {
+        transform: scale(1.05);
+    }
+
+    .cx-card-cat {
+        position: absolute;
+        top: .75rem;
+        left: .75rem;
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        background: var(--gold);
+        color: #0a0b0f;
+        padding: .25rem .6rem;
+        border-radius: 2px;
+    }
+
+    .cx-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10,11,15,.95) 0%, rgba(10,11,15,.2) 50%, transparent 100%);
+    }
+
+    .cx-card-body {
+        padding: 1.1rem 1.2rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+    }
+
+    .cx-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--white);
+    }
+
+    .cx-card-meta {
+        display: flex;
+        flex-direction: column;
+        gap: .2rem;
+        margin-top: .15rem;
+    }
+
+        .cx-card-meta span {
+            font-size: .75rem;
+            color: var(--silver);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+            .cx-card-meta span svg {
+                flex-shrink: 0;
+                opacity: .7;
+            }
+
+    .cx-card-footer {
+        padding: .9rem 1.2rem 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--rim);
+        gap: .5rem;
+    }
+
+    .cx-price {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--gold-lt);
+    }
+
+        .cx-price span {
+            font-family: 'Outfit', sans-serif;
+            font-size: .65rem;
+            font-weight: 500;
+            color: var(--silver);
+            display: block;
+            letter-spacing: .05em;
+        }
+
+    .cx-ticket-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--gold);
+        color: #0a0b0f;
+        font-family: 'Outfit', sans-serif;
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .55rem 1rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: background .2s, transform .15s;
+        white-space: nowrap;
+    }
+
+        .cx-ticket-btn:hover {
+            background: var(--gold-lt);
+            transform: scale(1.03);
+        }
+
+        .cx-ticket-btn svg {
+            flex-shrink: 0;
+        }
+
+    /* upcoming badge */
+    .cx-upcoming {
+        position: absolute;
+        bottom: .75rem;
+        right: .75rem;
+        font-size: .6rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        background: var(--ink);
+        color: var(--gold);
+        border: 1px solid var(--gold);
+        padding: .2rem .5rem;
+        border-radius: 2px;
+    }
+
+    /* ── PAGINATION ── */
+    .cx-pagination {
+        display: flex;
+        justify-content: center;
+        gap: .4rem;
+        padding: 1rem 2rem 3rem;
+        flex-wrap: wrap;
+    }
+
+    .cx-page-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 4px;
+        font-size: .82rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--rim);
+        color: var(--silver);
+        background: var(--ink2);
+        transition: all .2s;
+    }
+
+        .cx-page-link:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .cx-page-link.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #0a0b0f;
+        }
+
+    /* ── MODAL ── */
+    .cx-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(5,6,10,.85);
+        backdrop-filter: blur(6px);
+        z-index: 1050;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .cx-modal {
+        background: var(--ink2);
+        border: 1px solid var(--rim);
+        border-radius: 10px;
+        width: 100%;
+        max-width: 460px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0,0,0,.7);
+        animation: modalIn .25s ease;
+    }
+
+    @@keyframes modalIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(.97);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .cx-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.3rem 1.5rem;
+        border-bottom: 1px solid var(--rim);
+        background: var(--ink3);
+    }
+
+    .cx-modal-header-left {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .cx-modal-icon {
+        width: 38px;
+        height: 38px;
+        background: rgba(201,151,44,.15);
+        border: 1px solid rgba(201,151,44,.3);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .cx-modal-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--white);
+    }
+
+    .cx-modal-subtitle {
+        font-size: .72rem;
+        color: var(--silver);
+        margin-top: .1rem;
+    }
+
+    .cx-modal-close {
+        background: var(--ink3);
+        border: 1px solid var(--rim);
+        color: var(--silver);
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color .2s, border-color .2s;
+    }
+
+        .cx-modal-close:hover {
+            color: var(--white);
+            border-color: var(--silver);
+        }
+
+    .cx-modal-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cx-movie-strip {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        background: var(--ink3);
+        border: 1px solid var(--rim);
+        border-left: 3px solid var(--gold);
+        border-radius: 6px;
+        padding: .75rem 1rem;
+    }
+
+    .cx-movie-strip-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .cx-movie-strip-title {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .cx-movie-strip-price {
+        font-size: .78rem;
+        color: var(--gold);
+        font-weight: 600;
+        margin-top: .15rem;
+    }
+
+    .cx-field {
+        display: flex;
+        flex-direction: column;
+        gap: .4rem;
+    }
+
+    .cx-label {
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--silver);
+    }
+
+    .cx-input {
+        background: var(--ink3);
+        border: 1px solid var(--rim);
+        border-radius: 5px;
+        color: var(--white);
+        font-family: 'Outfit', sans-serif;
+        font-size: .88rem;
+        padding: .65rem .9rem;
+        outline: none;
+        transition: border-color .2s;
+        width: 100%;
+    }
+
+        .cx-input:focus {
+            border-color: var(--gold);
+        }
+
+    .cx-field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .8rem;
+    }
+
+    .cx-modal-footer {
+        display: flex;
+        gap: .6rem;
+        padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .cx-btn-confirm {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        background: var(--gold);
+        color: #0a0b0f;
+        font-family: 'Outfit', sans-serif;
+        font-size: .85rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        padding: .75rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .cx-btn-confirm:hover {
+            background: var(--gold-lt);
+        }
+
+    .cx-btn-cancel {
+        background: transparent;
+        border: 1px solid var(--rim);
+        color: var(--silver);
+        font-family: 'Outfit', sans-serif;
+        font-size: .82rem;
+        font-weight: 500;
+        padding: .75rem 1.2rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: border-color .2s, color .2s;
+    }
+
+        .cx-btn-cancel:hover {
+            border-color: var(--silver);
+            color: var(--white);
+        }
+
+    /* stagger animation */
+    .cx-card:nth-child(1) {
+        animation-delay: .05s
+    }
+
+    .cx-card:nth-child(2) {
+        animation-delay: .10s
+    }
+
+    .cx-card:nth-child(3) {
+        animation-delay: .15s
+    }
+
+    .cx-card:nth-child(4) {
+        animation-delay: .20s
+    }
+
+    .cx-card:nth-child(5) {
+        animation-delay: .25s
+    }
+
+    .cx-card:nth-child(6) {
+        animation-delay: .30s
+    }
+
+    .cx-card:nth-child(7) {
+        animation-delay: .35s
+    }
+
+    .cx-card:nth-child(8) {
+        animation-delay: .40s
+    }
+</style>
+
+<div class="cx">
+
+    @* Hero *@
+    <div class="cx-hero">
+        <div class="cx-hero-eyebrow">Now Showing</div>
+        <h1>The Big<br><em>Screen</em> Awaits</h1>
+        <p class="cx-hero-sub">Reserve your seats. Experience cinema.</p>
+        <div class="cx-hero-rule"></div>
+    </div>
+
+    @* Filter Bar *@
+    <div class="cx-filter-wrap">
+        <div class="cx-filter-inner">
+            <form method="get" action="/Customer/Home/Index" style="display:contents">
+                <input class="fx-input" type="text" placeholder="Search title…" name="MovieName" value="@ViewBag.MovieName" />
+                <input class="fx-input" type="number" placeholder="Min price" name="MinPrice" value="@ViewBag.MinPrice" />
+                <input class="fx-input" type="number" placeholder="Max price" name="MaxPrice" value="@ViewBag.MaxPrice" />
+
+                <select name="CategoryId" class="fx-input">
+                    <option value="0">All Categories</option>
+                    @foreach (var item in ViewBag.Categories)
+                    {
+                        <option value="@item.Id" selected="@(item.Id == ViewBag.CategoryId)">@item.Name</option>
+                    }
+                </select>
+
+                <select name="CinemaId" class="fx-input">
+                    <option value="0">All Cinemas</option>
+                    @foreach (var item in ViewBag.Cinemas)
+                    {
+                        <option value="@item.Id" selected="@(item.Id == ViewBag.CinemaId)">@item.Name</option>
+                    }
+                </select>
+
+                <label class="fx-check-wrap">
+                    <input type="checkbox" name="IsUpcoming" value="True" @(ViewBag.IsUpcoming != null ? "checked" : "") />
+                    Upcoming only
+                </label>
+
+                <button type="submit" class="fx-btn fx-btn-gold">Filter</button>
+                <a href="/Customer/Home/Index" class="fx-btn fx-btn-ghost">Clear</a>
+            </form>
+        </div>
+    </div>
+
+    @* Movie Grid *@
+    <div class="cx-grid-wrap">
+        <div class="cx-grid">
+            @foreach (var item in Model)
+            {
+                <div class="cx-card">
+                    <div class="cx-card-img-wrap">
+                        <img src="~/images/movieImages/@item.MainImg" alt="@item.Name" loading="lazy" />
+                        <div class="cx-card-overlay"></div>
+                        <div class="cx-card-cat">@item.Category.Name</div>
+                        @if (item.DateTime > DateTime.Now)
+                        {
+                            <div class="cx-upcoming">Upcoming</div>
+                        }
+                    </div>
+                    <div class="cx-card-body">
+                        <div class="cx-card-title">@item.Name</div>
+                        <div class="cx-card-meta">
+                            <span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" /><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2" /></svg>
+                                @item.Cinema.Name
+                            </span>
+                            <span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                @item.DateTime.ToString("dd MMM yyyy")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cx-card-footer">
+                        <div class="cx-price">
+                            EGP @item.Price
+                            <span>per ticket</span>
+                        </div>
+                        <form method="post" action="/Customer/Cart/AddToCart" style="display:inline">
+                            <input type="hidden" name="movieId" value="@item.Id" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <button type="submit" class="cx-ticket-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V9z" /></svg>
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* Pagination *@
+    <div class="cx-pagination">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a class="cx-page-link @(ViewBag.CurrentPage == i ? "active" : "")"
+               href="/Customer/Home/Index?Page=@i&MovieName=@ViewBag.MovieName&MinPrice=@ViewBag.MinPrice&MaxPrice=@ViewBag.MaxPrice&CategoryId=@ViewBag.CategoryId&CinemaId=@ViewBag.CinemaId">
+                @i
+            </a>
+        }
+    </div>
+
+</div>
+
+@* Booking Modal *@
+<div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:460px">
+        <div class="modal-content" style="background:transparent;border:none;box-shadow:none">
+
+            <div class="cx-modal">
+                <div class="cx-modal-header">
+                    <div class="cx-modal-header-left">
+                        <div class="cx-modal-icon">🎟️</div>
+                        <div>
+                            <div class="cx-modal-title" id="bookModalLabel">Buy Your Ticket</div>
+                            <div class="cx-modal-subtitle">Complete your reservation below</div>
+                        </div>
+                    </div>
+                    <button type="button" class="cx-modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                </div>
+
+                <form method="post" action="/Customer/Home/Book">
+                    <div class="cx-modal-body">
+
+                        <div class="cx-movie-strip">
+                            <div>🎬</div>
+                            <div class="cx-movie-strip-info">
+                                <div class="cx-movie-strip-title" id="modalMovieName">—</div>
+                                <div class="cx-movie-strip-price" id="modalMoviePrice">—</div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="MovieId" id="modalMovieId" />
+
+                        <div class="cx-field-row">
+                            <div class="cx-field">
+                                <label class="cx-label">Your Name</label>
+                                <input type="text" name="CustomerName" class="cx-input" placeholder="Full name" required />
+                            </div>
+                            <div class="cx-field">
+                                <label class="cx-label">Phone</label>
+                                <input type="text" name="CustomerPhone" class="cx-input" placeholder="01x xxxx xxxx" required />
+                            </div>
+                        </div>
+
+                        <div class="cx-field">
+                            <label class="cx-label">Number of Seats</label>
+                            <input type="number" name="Seats" class="cx-input" min="1" max="10" value="1" required />
+                        </div>
+
+                    </div>
+
+                    <div class="cx-modal-footer">
+                        <button type="button" class="cx-btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="cx-btn-confirm">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V9z" /></svg>
+                            Confirm Booking
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          var bookModal = document.getElementById('bookModal');
+          if (bookModal) {
+            bookModal.addEventListener('show.bs.modal', function (event) {
+              var btn = event.relatedTarget;
+              document.getElementById('modalMovieId').value    = btn.getAttribute('data-movie-id');
+              document.getElementById('modalMovieName').textContent  = btn.getAttribute('data-movie-name');
+              document.getElementById('modalMoviePrice').textContent = 'EGP ' + btn.getAttribute('data-movie-price') + ' per ticket';
+            });
+          }
+        });
+    </script>
+    @if (TempData["Success-Notification"] is not null)
+    {
+        <script>toastr.success('@TempData["Success-Notification"]')</script>
+    }
+}

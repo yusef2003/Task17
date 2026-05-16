@@ -1,0 +1,40 @@
+@{ ViewData["Title"] = "Confirm Email"; Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Confirm Email — Cinema</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<partial name="_AuthShared" />
+
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <span class="auth-logo-icon">✅</span>
+      <div class="auth-logo-title">Email Confirmed</div>
+      <div class="auth-logo-sub">Your account is now active</div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <h2>All Done!</h2>
+        <p>Your email has been successfully confirmed</p>
+      </div>
+      <div class="auth-card-body">
+        <div class="auth-alert auth-alert-success" style="text-align:center;padding:1.2rem">
+          🎉 Your account is verified. You can now sign in and start booking tickets!
+        </div>
+        <a href="/Identity/Account/Login" class="auth-submit" style="text-decoration:none;text-align:center;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Go to Login
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

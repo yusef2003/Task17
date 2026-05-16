@@ -1,0 +1,10 @@
+@model Category
+@{ ViewData["Title"] = "Create Category"; }
+<div class="card"><div class="card-header fw-bold">Create Category</div><div class="card-body">
+<form method="post">
+<div class="mb-3"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control"></textarea></div>
+<div class="mb-3"><label asp-for="Status" class="form-label"></label><select asp-for="Status" class="form-control"><option value="true">Active</option><option value="false">InActive</option></select></div>
+<button class="btn btn-primary" type="submit">Submit</button> <a class="btn btn-secondary" href="/Admin/Category/Index">Back</a>
+</form></div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /><partial name="_NotificationPartial" /> }

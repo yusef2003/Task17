@@ -1,0 +1,13 @@
+@model Cinema
+@{ ViewData["Title"] = "Update Cinema"; }
+<div class="card"><div class="card-header fw-bold">Update Cinema</div><div class="card-body">
+<form method="post" enctype="multipart/form-data">
+<input asp-for="Img" type="hidden" />
+<div class="mb-3"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /></div>
+<div class="mb-3"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control"></textarea></div>
+<div class="mb-3"><label class="form-label">Image</label><input type="file" name="ImgFile" class="form-control" onchange="previewImage(event)" /></div>
+@if (Model?.Img != null) { <img id="preview" src="/images/cinemaImages/@Model.Img" width="140" class="rounded mb-3" /> }
+<div class="mb-3"><label asp-for="Status" class="form-label"></label><select asp-for="Status" class="form-control"><option value="true">Active</option><option value="false">InActive</option></select></div>
+<button class="btn btn-primary" type="submit">Submit</button> <a class="btn btn-secondary" href="/Admin/Cinema/Index">Back</a>
+</form></div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /><partial name="_NotificationPartial" /><script>function previewImage(e){document.getElementById('preview').src=URL.createObjectURL(e.target.files[0]);}</script> }

@@ -1,0 +1,29 @@
+@model MovieVM
+@{ ViewData["Title"] = "Update Movie"; var m = Model.Movie ?? new Movie(); }
+<div class="card"><div class="card-header fw-bold">Update Movie</div><div class="card-body">
+<form method="post" enctype="multipart/form-data">
+<input type="hidden" name="Id" value="@m.Id" />
+<input type="hidden" name="MainImg" value="@m.MainImg" />
+<div class="row">
+<div class="col-md-6 mb-3"><label class="form-label">Name</label><input name="Name" value="@m.Name" class="form-control" /></div>
+<div class="col-md-6 mb-3"><label class="form-label">Price</label><input name="Price" value="@m.Price" class="form-control" type="number" step="0.01" /></div>
+</div>
+<div class="mb-3"><label class="form-label">Description</label><textarea name="Description" class="form-control">@m.Description</textarea></div>
+<div class="row">
+<div class="col-md-4 mb-3"><label class="form-label">Category</label><select name="CategoryId" class="form-control">@foreach(var c in Model.Categories){<option value="@c.Id" selected="@(m.CategoryId == c.Id)">@c.Name</option>}</select></div>
+<div class="col-md-4 mb-3"><label class="form-label">Cinema</label><select name="CinemaId" class="form-control">@foreach(var c in Model.Cinemas){<option value="@c.Id" selected="@(m.CinemaId == c.Id)">@c.Name</option>}</select></div>
+<div class="col-md-4 mb-3"><label class="form-label">DateTime</label><input type="datetime-local" name="DateTime" value="@m.DateTime.ToString("yyyy-MM-ddTHH:mm")" class="form-control" /></div>
+</div>
+<div class="mb-3"><label class="form-label">Main Image</label><input type="file" name="ImgFile" class="form-control" onchange="previewImage(event)" /></div>
+@if (!string.IsNullOrEmpty(m.MainImg)) { <img id="preview" src="/images/movieImages/@m.MainImg" width="140" class="rounded mb-3" /> }
+<div class="mb-3"><label class="form-label">Sub Images</label><input type="file" name="SubImgFiles" multiple class="form-control" /></div>
+<div class="mb-3"><label class="form-label">Actors</label>
+@foreach (var actor in Model.AllActors)
+{
+    <div class="form-check"><input class="form-check-input" type="checkbox" name="ActorIds" value="@actor.Id" @(Model.SelectedActorIds.Contains(actor.Id) ? "checked" : "") /><label class="form-check-label">@actor.Name</label></div>
+}
+</div>
+<div class="mb-3"><label class="form-label">Status</label><select name="Status" class="form-control"><option value="true" selected="@(m.Status)">Active</option><option value="false" selected="@(!m.Status)">InActive</option></select></div>
+<button class="btn btn-primary" type="submit">Submit</button> <a class="btn btn-secondary" href="/Admin/Movie/Index">Back</a>
+</form></div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /><partial name="_NotificationPartial" /><script>function previewImage(e){document.getElementById('preview').src=URL.createObjectURL(e.target.files[0]);}</script> }

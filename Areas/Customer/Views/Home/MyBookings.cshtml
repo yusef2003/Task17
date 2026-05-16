@@ -1,0 +1,12 @@
+@model List<Booking>
+@{ ViewData["Title"] = "My Bookings"; }
+<div class="container my-5"><h2 class="mb-4">My Bookings</h2>
+<div class="row mb-4"><div class="col-md-5"><form method="get" action="/Customer/Home/MyBookings"><div class="input-group"><input type="text" name="phone" class="form-control" placeholder="Enter your phone number" value="@ViewBag.Phone" required /><button type="submit" class="btn btn-dark">Search</button></div></form></div></div>
+@if (Model.Count == 0 && ViewBag.Phone != null) { <div class="alert alert-info">No bookings found for this phone number.</div> }
+else if (Model.Count > 0) {
+<table class="table table-hover"><thead><tr><th>#</th><th>Movie</th><th>Cinema</th><th>Showtime</th><th>Seats</th><th>Price</th><th>Booked At</th><th>Action</th></tr></thead><tbody>
+@foreach (var item in Model) { <tr><td>@item.Id</td><td>@item.Movie.Name</td><td>@item.Movie.Cinema.Name</td><td>@item.Movie.DateTime.ToString("dd MMM yyyy HH:mm")</td><td>@item.Seats</td><td>EGP @(item.Movie.Price * item.Seats)</td><td>@item.BookedAt.ToString("dd MMM yyyy")</td><td><a href="/Customer/Home/DeleteBooking?id=@item.Id&phone=@ViewBag.Phone" class="btn btn-danger btn-sm btn-delete">Delete</a></td></tr> }
+</tbody></table>
+<nav><ul class="pagination justify-content-center">@for(int i=1;i<=ViewBag.TotalPages;i++){<li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")"><a class="page-link" href="/Customer/Home/MyBookings?phone=@ViewBag.Phone&Page=@i">@i</a></li>}</ul></nav>
+}</div>
+@section Scripts { <script>document.querySelectorAll(".btn-delete").forEach(btn=>btn.addEventListener("click",function(e){e.preventDefault();const url=this.href;Swal.fire({title:'Cancel Booking?',text:'This action cannot be undone!',icon:'warning',showCancelButton:true,confirmButtonText:'Yes, cancel it!'}).then(r=>{if(r.isConfirmed) window.location.href=url;});}));</script>@if (TempData["Success-Notification"] is not null){<script>toastr.success('@TempData["Success-Notification"]')</script>} }

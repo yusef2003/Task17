@@ -1,0 +1,543 @@
+@model Actor
+@{
+    ViewData["Title"] = "Create Actor";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    .ac-wrap {
+        --bg: #0d0f14;
+        --surf: #161a23;
+        --surf2: #1c2030;
+        --rim: #252a3a;
+        --gold: #c9972c;
+        --gold-lt: #e8b84b;
+        --silver: #8a95b0;
+        --white: #f0f2f8;
+        --red: #d94f3d;
+        --green: #3ecf8e;
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        padding: 2.5rem 1.5rem;
+        color: var(--white);
+    }
+
+    .ac-inner {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    /* ── Page header ── */
+    .ac-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+    }
+
+    .ac-header-left {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+    }
+
+    .ac-header-icon {
+        width: 44px;
+        height: 44px;
+        background: rgba(201,151,44,.15);
+        border: 1px solid rgba(201,151,44,.3);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .ac-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.9rem;
+        letter-spacing: .1em;
+        color: var(--white);
+        line-height: 1;
+    }
+
+    .ac-subtitle {
+        font-size: .75rem;
+        color: var(--silver);
+        margin-top: .15rem;
+        letter-spacing: .04em;
+    }
+
+    .ac-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .78rem;
+        font-weight: 600;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--silver);
+        text-decoration: none;
+        border: 1px solid var(--rim);
+        padding: .45rem .9rem;
+        border-radius: 5px;
+        transition: color .2s, border-color .2s;
+    }
+
+        .ac-back-btn:hover {
+            color: var(--white);
+            border-color: var(--silver);
+        }
+
+    /* ── Card ── */
+    .ac-card {
+        background: var(--surf);
+        border: 1px solid var(--rim);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .ac-card-body {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.4rem;
+    }
+
+    /* ── Field ── */
+    .ac-field {
+        display: flex;
+        flex-direction: column;
+        gap: .45rem;
+    }
+
+    .ac-label {
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: var(--silver);
+    }
+
+    .ac-input, .ac-textarea, .ac-select {
+        background: var(--surf2);
+        border: 1px solid var(--rim);
+        border-radius: 6px;
+        color: var(--white);
+        font-family: 'DM Sans', sans-serif;
+        font-size: .9rem;
+        padding: .65rem .95rem;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        width: 100%;
+    }
+
+        .ac-input:focus, .ac-textarea:focus, .ac-select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,151,44,.12);
+        }
+
+    .ac-textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .ac-select option {
+        background: var(--surf2);
+    }
+
+    /* validation */
+    .field-validation-error {
+        font-size: .75rem;
+        color: var(--red);
+        margin-top: .2rem;
+    }
+
+    .input-validation-error {
+        border-color: var(--red) !important;
+    }
+
+    /* ── Image uploader ── */
+    .ac-uploader {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: .6rem;
+        border: 2px dashed var(--rim);
+        border-radius: 10px;
+        padding: 2rem 1.5rem;
+        cursor: pointer;
+        transition: border-color .25s, background .25s;
+        position: relative;
+        background: var(--surf2);
+        text-align: center;
+    }
+
+        .ac-uploader:hover, .ac-uploader.drag-over {
+            border-color: var(--gold);
+            background: rgba(201,151,44,.06);
+        }
+
+        .ac-uploader input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+    .ac-upload-icon {
+        width: 52px;
+        height: 52px;
+        background: rgba(201,151,44,.12);
+        border: 1px solid rgba(201,151,44,.25);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        transition: transform .2s;
+    }
+
+    .ac-uploader:hover .ac-upload-icon {
+        transform: scale(1.08);
+    }
+
+    .ac-upload-title {
+        font-size: .88rem;
+        font-weight: 600;
+        color: var(--white);
+    }
+
+        .ac-upload-title span {
+            color: var(--gold);
+            text-decoration: underline;
+        }
+
+    .ac-upload-hint {
+        font-size: .72rem;
+        color: var(--silver);
+    }
+
+    /* ── Preview ── */
+    .ac-preview-wrap {
+        display: none;
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--rim);
+        background: var(--surf2);
+    }
+
+        .ac-preview-wrap.visible {
+            display: block;
+        }
+
+        .ac-preview-wrap img {
+            width: 100%;
+            max-height: 320px;
+            object-fit: cover;
+            display: block;
+        }
+
+    .ac-preview-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .6rem .9rem;
+        background: rgba(10,11,15,.75);
+        backdrop-filter: blur(6px);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .ac-preview-name {
+        font-size: .75rem;
+        color: var(--white);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 70%;
+    }
+
+    .ac-preview-remove {
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--red);
+        background: rgba(217,79,61,.12);
+        border: 1px solid rgba(217,79,61,.25);
+        border-radius: 4px;
+        padding: .2rem .6rem;
+        cursor: pointer;
+        transition: background .2s;
+        flex-shrink: 0;
+    }
+
+        .ac-preview-remove:hover {
+            background: rgba(217,79,61,.25);
+        }
+
+    /* ── Status toggle ── */
+    .ac-status-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .6rem;
+    }
+
+    .ac-status-opt {
+        display: none;
+    }
+
+    .ac-status-lbl {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        border: 1px solid var(--rim);
+        border-radius: 7px;
+        padding: .75rem 1rem;
+        cursor: pointer;
+        font-size: .85rem;
+        font-weight: 500;
+        color: var(--silver);
+        background: var(--surf2);
+        transition: all .2s;
+    }
+
+    .ac-status-opt:checked + .ac-status-lbl {
+        border-color: var(--gold);
+        color: var(--white);
+        background: rgba(201,151,44,.1);
+    }
+
+    .ac-status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+        .ac-status-dot.active {
+            background: var(--green);
+        }
+
+        .ac-status-dot.inactive {
+            background: var(--red);
+        }
+
+    /* ── Footer ── */
+    .ac-card-footer {
+        padding: 1.2rem 2rem;
+        border-top: 1px solid var(--rim);
+        display: flex;
+        gap: .7rem;
+        justify-content: flex-end;
+        background: var(--surf);
+    }
+
+    .ac-submit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: var(--gold);
+        color: #0a0b0f;
+        font-family: 'DM Sans', sans-serif;
+        font-size: .82rem;
+        font-weight: 700;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        padding: .65rem 1.6rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background .2s, transform .15s;
+    }
+
+        .ac-submit-btn:hover {
+            background: var(--gold-lt);
+            transform: translateY(-1px);
+        }
+
+    .ac-cancel-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: transparent;
+        color: var(--silver);
+        font-family: 'DM Sans', sans-serif;
+        font-size: .82rem;
+        font-weight: 500;
+        padding: .65rem 1.2rem;
+        border: 1px solid var(--rim);
+        border-radius: 6px;
+        text-decoration: none;
+        transition: color .2s, border-color .2s;
+    }
+
+        .ac-cancel-btn:hover {
+            color: var(--white);
+            border-color: var(--silver);
+        }
+</style>
+
+<div class="ac-wrap">
+    <div class="ac-inner">
+
+        <div class="ac-header">
+            <div class="ac-header-left">
+                <div class="ac-header-icon">🎭</div>
+                <div>
+                    <div class="ac-title">@(Model?.Id > 0 ? "Edit" : "New") Actor</div>
+                    <div class="ac-subtitle">@(Model?.Id > 0 ? "Update actor details" : "Add a new actor to the roster")</div>
+                </div>
+            </div>
+            <a href="/Admin/Actor/Index" class="ac-back-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+                Back
+            </a>
+        </div>
+
+        <div class="ac-card">
+            <form method="post" enctype="multipart/form-data">
+                <input asp-for="Img" type="hidden" />
+
+                <div class="ac-card-body">
+
+                    @* Name *@
+                    <div class="ac-field">
+                        <label asp-for="Name" class="ac-label"></label>
+                        <input asp-for="Name" class="ac-input" placeholder="e.g. Leonardo DiCaprio" />
+                        <span asp-validation-for="Name"></span>
+                    </div>
+
+                    @* Bio *@
+                    <div class="ac-field">
+                        <label asp-for="Bio" class="ac-label"></label>
+                        <textarea asp-for="Bio" class="ac-textarea" placeholder="Short biography…"></textarea>
+                        <span asp-validation-for="Bio"></span>
+                    </div>
+
+                    @* Image uploader *@
+                    <div class="ac-field">
+                        <label class="ac-label">Actor Photo</label>
+
+                        @* Preview *@
+                        <div class="ac-preview-wrap @(Model?.Img != null ? "visible" : "")" id="previewWrap">
+                            <img id="preview"
+                                 src="@(Model?.Img != null ? "/images/actorImages/" + Model.Img : "")"
+                                 alt="Preview" />
+                            <div class="ac-preview-bar">
+                                <span class="ac-preview-name" id="previewName">
+                                    @(Model?.Img ?? "Current image")
+                                </span>
+                                <button type="button" class="ac-preview-remove" id="removeBtn">Remove</button>
+                            </div>
+                        </div>
+
+                        @* Drop zone *@
+                        <div class="ac-uploader @(Model?.Img != null ? "d-none" : "")" id="dropZone">
+                            <input type="file" name="ImgFile" id="imgFileInput"
+                                   accept="image/png,image/jpeg,image/webp,image/gif" />
+                            <div class="ac-upload-icon">📷</div>
+                            <div class="ac-upload-title"><span>Click to upload</span> or drag &amp; drop</div>
+                            <div class="ac-upload-hint">PNG, JPG, WEBP &mdash; max 5 MB</div>
+                        </div>
+
+                    </div>
+
+                    @* Status *@
+                    <div class="ac-field">
+                        <label class="ac-label">Status</label>
+                        <div class="ac-status-group">
+                            <input asp-for="Status" class="ac-status-opt" type="radio" id="statusActive"
+                                   name="Status" value="true" checked="@(Model?.Status != false)" />
+                            <label class="ac-status-lbl" for="statusActive">
+                                <span class="ac-status-dot active"></span> Active
+                            </label>
+
+                            <input asp-for="Status" class="ac-status-opt" type="radio" id="statusInactive"
+                                   name="Status" value="false" checked="@(Model?.Status == false)" />
+                            <label class="ac-status-lbl" for="statusInactive">
+                                <span class="ac-status-dot inactive"></span> Inactive
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="ac-card-footer">
+                    <a href="/Admin/Actor/Index" class="ac-cancel-btn">Cancel</a>
+                    <button type="submit" class="ac-submit-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        Save Actor
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_NotificationPartial" />
+    <script>
+        const input      = document.getElementById('imgFileInput');
+        const preview    = document.getElementById('preview');
+        const previewWrap = document.getElementById('previewWrap');
+        const previewName = document.getElementById('previewName');
+        const dropZone   = document.getElementById('dropZone');
+        const removeBtn  = document.getElementById('removeBtn');
+
+        function showPreview(file) {
+          if (!file) return;
+          preview.src = URL.createObjectURL(file);
+          previewName.textContent = file.name;
+          previewWrap.classList.add('visible');
+          dropZone.classList.add('d-none');
+        }
+
+        // File input change
+        input.addEventListener('change', function (e) {
+          if (e.target.files[0]) showPreview(e.target.files[0]);
+        });
+
+        // Drag-and-drop
+        dropZone.addEventListener('dragover', function (e) {
+          e.preventDefault();
+          dropZone.classList.add('drag-over');
+        });
+        dropZone.addEventListener('dragleave', function () {
+          dropZone.classList.remove('drag-over');
+        });
+        dropZone.addEventListener('drop', function (e) {
+          e.preventDefault();
+          dropZone.classList.remove('drag-over');
+          var dt = e.dataTransfer;
+          if (dt.files[0]) {
+            // transfer to the real input
+            var dataTransfer = new DataTransfer();
+            dataTransfer.items.add(dt.files[0]);
+            input.files = dataTransfer.files;
+            showPreview(dt.files[0]);
+          }
+        });
+
+        // Remove / change image
+        removeBtn.addEventListener('click', function () {
+          input.value = '';
+          preview.src = '';
+          previewWrap.classList.remove('visible');
+          dropZone.classList.remove('d-none');
+          previewName.textContent = '';
+        });
+    </script>
+}
